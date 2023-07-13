@@ -16,11 +16,29 @@ EmployeeRouter.post("/", EmpAuth, async (req, res) => {
   }
 });
 
-EmployeeRouter.get("/", async (req, res) => {
+EmployeeRouter.get("/:page", async (req, res) => {
+  let { page } = req.params;
   try {
-    let users = await EmployeeModel.find();
+    if (!page) {
+      page = 1;
+    }
+
+    let users = await EmployeeModel.find().limit(5).skip(page);
 
     res.json({ users });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+EmployeeRouter.delete("/:id", async (req, res) => {
+  let { id } = req.params;
+  try {
+    let usersDeleted = await EmployeeModel.findOneAndDelete({ _id: id });
+
+    let users = await EmployeeModel.find();
+
+    res.json({ msg: "Success", users });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
