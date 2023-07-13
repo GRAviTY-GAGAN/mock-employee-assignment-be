@@ -23,7 +23,9 @@ EmployeeRouter.get("/:page", async (req, res) => {
       page = 1;
     }
 
-    let users = await EmployeeModel.find().limit(5).skip(page);
+    let users = await EmployeeModel.find()
+      .limit(5)
+      .skip(page * 5);
 
     res.json({ users });
   } catch (error) {
